@@ -14,7 +14,7 @@ cd $WORKING_DIR
 echo "Changed working directory to: ${WORKING_DIR}"
 
 #Download the package info
-wget http://dl.ubnt.com/unifi/debian/dists/stable/ubiquiti/binary-armhf/Packages.gz
+wget "http://dl.ubnt.com/unifi/debian/dists/stable/ubiquiti/binary-armhf/Packages.gz"
 
 #Get the package filenames
 FILEURL=$(zcat Packages.gz | grep Filename | awk '{print $2}')
