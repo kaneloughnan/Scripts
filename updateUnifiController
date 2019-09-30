@@ -54,7 +54,6 @@ dpkg -i $FIXED_PACKAGE
 
 #Remove all created files
 echo "Removing all created files"
-cd ..
 rm -rf $WORKING_DIR
 
 echo "Unifi Controller successfully installed/updated"
