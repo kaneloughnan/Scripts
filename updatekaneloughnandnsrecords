@@ -34,6 +34,7 @@ echo "currentIp:" $currentIp
 if [ $dnsIp != $currentIp ]; then
         echo "IP's are not equal, updating record"
 
+        # Loop through each of the required domains in the .txt file and update the DNS record
         while read line; do
             updateIP $line
         done </home/ubuntu/domains.txt
