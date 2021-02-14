@@ -1,0 +1,65 @@
+#!/bin/bash
+  
+webDirectory="/var/www/html/offload/web"
+
+#Set working directory to the website
+echo "Setting directory to" $webDirectory
+cd $webDirectory
+
+#Get latest code form the master branch
+echo "Pulling latest code from Git"
+git pull
+
+#Remove node_modules directory in case it is out-of-date
+echo "Deleting node_modules directory"
+rm -r ./node_modules
+
+echo "Installing required npm packages for website"
+npm install
+
+echo "Compiling website"
+ng build --configuration=testing
+
+#Hold off on updating the website until the API has been updated
+echo "Website now ready for updating"
+
+
+
+apiDirectory="/var/www/html/offload/api"
+
+#Set working directory to the API
+echo "Setting directory to" $apiDirectory
+cd $apiDirectory
+
+#Get latest code form the master branch
+echo "Pulling latest code from Git"
+git pull
+
+#Remove public content (photos and reports) and the node_modules directory in case it is out-of-date
+echo "Deleting public content and node_modules directory"
+rm -r ./public/photos/* ./public/reports/* ./node_modules
+
+echo "Installing required npm packages for API"
+npm install
+
+echo "Dropping offload database"
+mysql -u root -e "DROP DATABASE offload"
+
+echo "Creating offload database"
+mysql -u root < ./sql/offload.sql
+
+echo "Restarting Offload API server"
+pm2 restart 1
+
+echo "Offload API update complete"
+
+
+
+#Set working directory back to the website
+echo "Setting directory back to" $webDirectory
+cd $webDirectory
+
+#Update website by moving files from dist folder to testing folder
+mv ./dist/* ./testing
+
+echo "Offload website update complete"
